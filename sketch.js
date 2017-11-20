@@ -19,6 +19,7 @@ function setup() {
     }
   }
   play = new PlayButton();
+  rand = new RandomButton();
 }
 
 function draw(){
@@ -35,6 +36,9 @@ function draw(){
   topBar()
   play.growth();
   play.display();
+  rand.display();
+  rand.growth();
+  rand.rand();
 }
 
 function BeatPad(x, y){
@@ -61,14 +65,6 @@ function BeatPad(x, y){
       }
     }
   }
-  this.select = function (){
-    if (selectValue == 140){
-      selectValue = 0;
-    }
-    else{
-      selectValue = 140;
-    }
-  }
   this.checkClick = function() {
     // checks if mouseX and mouseY are over this particular pad
     if (mouseX > this.x && mouseX < this.x+(600/10) && mouseY > this.y && mouseY < this.y+50 && mouseX > 60 && mouseY>50){
@@ -88,6 +84,7 @@ function mouseClicked (){
     pads[i].checkClick();
   }
   play.checkClick();
+  rand.hasBeenClicked();
 }
 
 function PlayButton(){
@@ -98,7 +95,7 @@ function PlayButton(){
   this.display = function(){
     fill (0,255,0);
     rect (this.x, this.y, this.w, this.w);
-    triangle (this.x + 5, this.y + 5, this.x+35, this.y+20, this.x+5, this.y+35);
+    triangle (555, 10, 585, 25, 555, 40);
   }
   this.checkClick = function (){
     // checks if mouse is over play button
@@ -117,33 +114,59 @@ function PlayButton(){
     if (mouseX > this.x && this.x+40 > mouseX && mouseY > this.y && this.y+40 > mouseY){
       this.x = 549;
       this.y = 4;
-      this.w = 41;
-      console.log (" button should be bigger");
+      this.w = 42;
     }
     else {
       this.x = 550;
-      this.y = 6;
+      this.y = 5;
       this.w = 40;
     }
   }
 }
 
-function randomButton (){
-  // button design
-  fill (0,0,255);
-  rect (10,5,40,40);
-  fill (255);
-  textSize (46);
-  text ("R", 12, 43);
-  //grows button when mouse is over
-  if (checkMousePositionR === true){
+function RandomButton(){
+  this.x = 10;
+  this.y = 5;
+  this.w = 40;
+  this.hasBeenClicked = false;
+  this.display = function (){
     fill (0,0,255);
-    rect (9,4,42,42);
+    rect (this.x,this.y,this.w,this.w);
     fill (255);
-    textSize (48);
-    text ("R", 11, 44);
+    textSize (46);
+    text ("R", 12, 43);
+  }
+  this.growth = function (){
+    if (mouseX > this.x && this.x+40 > mouseX && mouseY > this.y && this.y+40 > mouseY){
+      this.x = 9;
+      this.y = 4;
+      this.w = 42;
+    }
+    else {
+      this.x = 10;
+      this.y = 5;
+      this.w = 40;
+    }
+  }
+  this.checkClick = function (){
+    if (mouseX > this.x && this.x+40 > mouseX && mouseY > this.y && this.y+40 > mouseY){
+      if (this.hasBeenClicked == false){
+        this.hasBeenClicked = true;
+      }
+      else {
+        this.hasBeenClicked = false;
+      }
+
+    }
+  }
+  this.rand = function (){
+    if (this.hasBeenClicked == true){
+      console.log ("clicked");
+
+    }
   }
 }
+
 
 
 // generates white bar at top of beat maker
@@ -151,4 +174,7 @@ function topBar(){
   fill (255);
   stroke (0);
   rect (0,0,599,50);
+  fill (0);
+  textSize (50);
+  text ("Ultimate Beat Maker", 75,40);
 }
