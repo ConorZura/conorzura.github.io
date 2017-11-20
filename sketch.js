@@ -1,10 +1,15 @@
-var pads = [];
+var pads = [[]];
 var play;
 var snare;
 var kick;
 var highHat;
 var symbol;
 var tambourine;
+
+var sounds = [];
+var currentColumn = 1;
+var hasPlayedColumn = false;
+lastPlayedTime = 0;
 
 function setup() {
   createCanvas (600, 600);
@@ -13,9 +18,13 @@ function setup() {
   highHat = loadImage ("img_495187.png");
   symbol = loadImage ("cymbal-512.png");
   tambourine = loadImage ("88562-tambourine.png");
-  for (var y = 0; y<6; y++){
-    for (var x = 0; x<10; x++){
-      pads[y*10+x]= new BeatPad(x,y);
+
+  sounds[0] = loadSound('cymbal.wav');
+
+  for (var x = 0; x<10; x++){
+    pads[x] = [];
+    for (var y = 0; y<6; y++){
+      pads[x][y]= new BeatPad(x,y);
     }
   }
   play = new PlayButton();
@@ -24,9 +33,11 @@ function setup() {
 
 function draw(){
   background(255);
-  for (var i = 0; i<pads.length; i++){
-    pads[i].display();
-    pads[i].lightUp();
+  for (var x = 0; x<10; x++){
+    for (var y = 0; y<6; y++){
+      pads[x][y].display();
+      pads[x][y].lightUp();
+    }
   }
   image(kick, 0, 50, 60, 50);
   image(snare,0,100,60,50);
@@ -38,7 +49,8 @@ function draw(){
   play.display();
   rand.display();
   rand.growth();
-  rand.rand();
+  moveColumn();
+  //rand.rand2();
 }
 
 function BeatPad(x, y){
@@ -78,13 +90,45 @@ function BeatPad(x, y){
   }
 }
 
+function playColumn(num) {
+  hasPlayedColumn = true;
+  for (var i = 0; i < 6; i++){
+    if (pads[num][i].hasBeenClicked == true){
+      sounds[0].play();
+
+    }
+  }
+}
+function moveColumn(){
+  if (millis()-lastPlayedTime > 200){
+    lastPlayedTime = millis();
+    currentColumn++;
+    hasPlayedColumn = false;
+    if (currentColumn == 10){
+      currentColumn = 1;
+    }
+    playColumn(currentColumn);
+  }
+}
+
+function randomizeBeatPads() {
+  // for loop that randomly sets certain pads to on or off
+  for (var x = 1; x<10; x++){
+    for (var y = 0; y<6; y++){
+      pads [x][y].hasBeenClicked = random([true,false])
+    }
+  }
+  console.log("randomizing buttons!");
+}
 
 function mouseClicked (){
-  for (var i = 0; i < pads.length; i++) {
-    pads[i].checkClick();
+  for (var x = 1; x<10; x++){
+    for (var y = 0; y<6; y++){
+      pads[x][y].checkClick();
+    }
   }
   play.checkClick();
-  rand.hasBeenClicked();
+  rand.checkClick();
 }
 
 function PlayButton(){
@@ -106,6 +150,14 @@ function PlayButton(){
       else if (this.hasBeenClicked == true){
         this.hasBeenClicked = false;
       }
+    }
+  }
+  this.playBeat = function (){
+    if (this.hasBeenClicked == true){
+      thisBeat++;
+    }
+    else if (this.hasBeenClicked == false){
+      thisBeat = 60;
     }
   }
 
@@ -150,16 +202,18 @@ function RandomButton(){
   }
   this.checkClick = function (){
     if (mouseX > this.x && this.x+40 > mouseX && mouseY > this.y && this.y+40 > mouseY){
-      if (this.hasBeenClicked == false){
-        this.hasBeenClicked = true;
-      }
-      else {
-        this.hasBeenClicked = false;
-      }
+      // console.log("? " + this.hasBeenClicked);
+      // if (this.hasBeenClicked == false){
+      //   this.hasBeenClicked = true;
+      // }
+      // else {
+      //   this.hasBeenClicked = false;
+      // }
+      randomizeBeatPads();
 
     }
   }
-  this.rand = function (){
+  this.rand2 = function (){
     if (this.hasBeenClicked == true){
       console.log ("clicked");
 
