@@ -5,7 +5,6 @@ var kick;
 var highHat;
 var symbol;
 var tambourine;
-
 var sounds = [];
 var currentColumn = 1;
 var hasPlayedColumn = false;
@@ -18,8 +17,11 @@ function setup() {
   highHat = loadImage ("img_495187.png");
   symbol = loadImage ("cymbal-512.png");
   tambourine = loadImage ("88562-tambourine.png");
-
-  sounds[0] = loadSound('cymbal.wav');
+  sounds[1] = loadSound('kickDrum.wav');
+  sounds[2] = loadSound('snare.wav');
+  sounds[3] = loadSound('hiHat.wav');
+  sounds[4] = loadSound('cymbal.wav');
+  sounds[5] = loadSound('tambourine.wav');
 
   for (var x = 0; x<10; x++){
     pads[x] = [];
@@ -92,10 +94,12 @@ function BeatPad(x, y){
 
 function playColumn(num) {
   hasPlayedColumn = true;
-  for (var i = 0; i < 6; i++){
-    if (pads[num][i].hasBeenClicked == true){
-      sounds[0].play();
-
+  console.log (play.hasBeenClicked);
+  if (play.hasBeenClicked == true){
+    for (var i = 0; i < 6; i++){
+      if (pads[num][i].hasBeenClicked == true){
+        sounds[i].play();
+      }
     }
   }
 }
@@ -114,7 +118,7 @@ function moveColumn(){
 function randomizeBeatPads() {
   // for loop that randomly sets certain pads to on or off
   for (var x = 1; x<10; x++){
-    for (var y = 0; y<6; y++){
+    for (var y = 1; y<6; y++){
       pads [x][y].hasBeenClicked = random([true,false])
     }
   }
@@ -143,7 +147,7 @@ function PlayButton(){
   }
   this.checkClick = function (){
     // checks if mouse is over play button
-    if (mouseX > this.x && this.x+40 > mouseX && mouseY > this.y && this.y+40 > mouseX){
+    if (mouseX > this.x && this.x+40 > mouseX && mouseY > this.y && this.y+40 > mouseY){
       if (this.hasBeenClicked == false){
         this.hasBeenClicked = true;
       }
@@ -202,13 +206,6 @@ function RandomButton(){
   }
   this.checkClick = function (){
     if (mouseX > this.x && this.x+40 > mouseX && mouseY > this.y && this.y+40 > mouseY){
-      // console.log("? " + this.hasBeenClicked);
-      // if (this.hasBeenClicked == false){
-      //   this.hasBeenClicked = true;
-      // }
-      // else {
-      //   this.hasBeenClicked = false;
-      // }
       randomizeBeatPads();
 
     }
