@@ -69,6 +69,7 @@ function BeatPad(x, y){
       ellipse (this.x + 30, this.y + 25, 25);
     }
   }
+
   this.lightUp = function (){
     if (mouseX > this.x && mouseX < this.x+(600/10) && mouseY > this.y && mouseY < this.y+50){
       fill (175);
@@ -79,6 +80,7 @@ function BeatPad(x, y){
       }
     }
   }
+
   this.checkClick = function() {
     // checks if mouseX and mouseY are over this particular pad
     if (mouseX > this.x && mouseX < this.x+(600/10) && mouseY > this.y && mouseY < this.y+50 && mouseX > 60 && mouseY>50){
@@ -207,18 +209,14 @@ function RandomButton(){
   this.checkClick = function (){
     if (mouseX > this.x && this.x+40 > mouseX && mouseY > this.y && this.y+40 > mouseY){
       randomizeBeatPads();
-
     }
   }
   this.rand2 = function (){
     if (this.hasBeenClicked == true){
       console.log ("clicked");
-
     }
   }
 }
-
-
 
 // generates white bar at top of beat maker
 function topBar(){
